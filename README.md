@@ -1,2 +1,4 @@
 # camvas
-Chorioallantoic Membrane Vessel Segmentation and Vascular Descriptor Analysis
+<div align="center">
+<img src="media/camvas-cartoon.png" alt="logo" width="60%">
+</div>
