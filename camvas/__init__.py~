@@ -1,0 +1,22 @@
+
+from .core import *
+
+
+
+
+import pathlib
+
+
+
+__version__ = "1.0.0"
+
+project_root = pathlib.Path(__file__).parent.absolute()
+
+project_paths = {
+    "root" : project_root,
+    "output" : pathlib.Path(project_root, "output"),
+    "weights" : pathlib.Path(project_root, "output", "weights"),
+    "visualization" : pathlib.Path(project_root, "visualization"),
+    "scripts" : pathlib.Path(project_root, "scripts")
+}
+
