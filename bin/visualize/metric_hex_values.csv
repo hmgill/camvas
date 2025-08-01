@@ -1,9 +1,0 @@
-﻿metric,train,val
-precision,#1662db,#4388f7
-recall,#05f040,#4bfa77
-f1_score,#fa9405,#f5ac47
-auc,#4df0df,#0dffe7
-accuracy,#0b965e,#08c97c
-map,#cfc811,#e6e163
-iou,#9602e0,#bf5af2
-loss,#ec1ef7,#f86eff
