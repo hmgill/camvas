@@ -1,0 +1,97 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.14.0-gpu
+
+%labels
+    Author Hunter Mathias Gill
+    Version 1.0.0
+    Description CAMVAS - Chorioallantoic Membrane Vascular Analysis System
+
+%environment
+    # Set environment variables
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ=UTC
+    export PYTHONPATH=/opt/camvas:$PYTHONPATH
+    export PATH=/opt/camvas:$PATH
+
+
+%post
+    # Update and install system dependencies
+    apt-get update && apt-get install -y --no-install-recommends \
+        python3-pip \
+        python3-dev \
+        libgl1-mesa-glx \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender-dev \
+        libgomp1 \
+        libgtk-3-0 \
+        wget \
+        git \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Create directory for CAMVAS
+    mkdir -p /opt/camvas
+    
+    # Install Python dependencies
+    # NOTE: Only ONE opencv package should be installed. 
+    #       Chose opencv-contrib-python for main + extra modules.
+    pip3 install --no-cache-dir \
+        bm3d==4.0.3 \
+        colormap==1.0.4 \
+        colorutils==0.3.0 \
+        confection==0.1.5 \
+        dill==0.4.0 \
+        filetype==1.2.0 \
+        imageio==2.34.0 \
+        imageio-ffmpeg \
+        loguru==0.7.3 \
+        matplotlib==3.8.3 \
+        numpy==1.24.0 \
+        numpydantic==1.6.10 \
+        opencv-contrib-python==4.9.0.80 \
+        pandas==2.3.1 \
+        pvbm==3.0.0.0 \
+        pydantic==2.11.7 \
+        scikit-learn==1.4.1.post1 \
+        scikit-image \
+        shortuuid==1.0.13 \
+        tqdm==4.66.2
+
+
+%files
+    # Copy your CAMVAS code into the container
+    # This assumes you're building from the parent directory of camvas/
+    ./camvas /opt/camvas
+
+%runscript
+    #!/bin/bash
+    cd /opt/camvas
+    if [ $# -eq 0 ]; then
+        echo "CAMVAS - Chorioallantoic Membrane Vascular Analysis System"
+        echo "Usage: apptainer run camvas.sif [python script.py | python -m camvas.camvas --help]"
+    else
+        exec python3 "$@"
+    fi
+
+%help
+    CAMVAS - Chorioallantoic Membrane Vascular Analysis System
+    
+    This container includes CAMVAS and all its dependencies for blood vessel
+    segmentation and analysis in chorioallantoic membrane images.
+    
+    Usage examples:
+    # Run CAMVAS training
+    apptainer run camvas.sif -m camvas.camvas --config my_config.config --mode train
+    
+    # Run CAMVAS benchmark
+    apptainer run camvas.sif -m camvas.camvas --config my_config.config --mode benchmark
+    
+    # Run CAMVAS prediction
+    apptainer run camvas.sif -m camvas.camvas --config my_config.config --mode predict
+
+    # Run CAMVAS descriptor computations
+    apptainer run camvas.sif -m camvas.camvas --config my_config.config --mode descriptors
+    
+    # Interactive shell
+    apptainer shell camvas.sif
